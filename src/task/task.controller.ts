@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Param, UsePipes, ValidationPipe, ParseIntP
 import { TaskService } from './task.service';
 import { Task } from './task.entity';
 import { CreateTaskDto } from './dto/create-task.dto';
+import { UpdateTaskDto } from './dto/update-task.dto';
 import { ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
 import { UpdateResult, DeleteResult } from 'typeorm';
 
@@ -33,11 +34,11 @@ export class TaskController {
     }
     
     @Put('/:id')
+    @UsePipes(ValidationPipe)
     @ApiOperation({ summary: 'Update a Task', description: 'Altera uma tarefa e registra no banco de dados' })
     @ApiResponse({ status: 200, description: 'ok', type: Task, isArray: false })
-    async updateTask(@Body() taskUpdate: Task, @Param('id') id: number): Promise<UpdateResult> {
-        taskUpdate.id = id;
-        return await this.taskService.updateTask(taskUpdate);
+    async updateTask(@Body() taskUpdate: UpdateTaskDto, @Param('id') id: number): Promise<UpdateResult> {
+        return await this.taskService.updateTask(id, taskUpdate);
     }
 
     @Delete('/:id')

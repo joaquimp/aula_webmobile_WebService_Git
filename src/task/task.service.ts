@@ -5,6 +5,7 @@ import { Task } from './task.entity'
 import { CreateTaskDto } from './dto/create-task.dto';
 import { GetTasksFilterDto } from './dto/get-task-filter.dto';
 import { UpdateResult, DeleteResult } from 'typeorm';
+import { UpdateTaskDto } from './dto/update-task.dto';
 
 @Injectable()
 export class TaskService {
@@ -31,8 +32,8 @@ export class TaskService {
         return this.taskRepository.createTask(createTaskDto);
     }
 
-    async updateTask(taskUpdate: Task): Promise<UpdateResult> {
-        return await this.taskRepository.update(taskUpdate.id, taskUpdate);
+    async updateTask(id: number, taskUpdate: UpdateTaskDto): Promise<UpdateResult> {
+        return await this.taskRepository.update(id, taskUpdate);
     }
 
     async deleteTask(id: number): Promise<DeleteResult> {
