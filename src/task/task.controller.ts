@@ -1,9 +1,9 @@
-import { Controller, Get, Post, Body, Param, UsePipes, ValidationPipe, ParseIntPipe, Query, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UsePipes, ValidationPipe, ParseIntPipe, Query, NotFoundException, Put, Delete } from '@nestjs/common';
 import { TaskService } from './task.service';
 import { Task } from './task.entity';
 import { CreateTaskDto } from './dto/create-task.dto';
-import { GetTasksFilterDto } from './dto/get-task-filter.dto';
 import { ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
+import { UpdateResult, DeleteResult } from 'typeorm';
 
 @Controller('tasks')
 export class TaskController {
@@ -12,8 +12,8 @@ export class TaskController {
     @Get()
     @ApiOperation({ summary: 'Get all Tasks', description: 'buscas todas as tarefas cadastradas no banco de dados'})
     @ApiResponse({ status: 200, description: 'ok', type: Task, isArray: true })
-    async getTasks(): Promise<Task[]> {
-        return await this.taskService.getTasks();
+    async getTasks(@Query() q): Promise<Task[]> {
+        return await this.taskService.getTasks(q);
     }
 
     @Get('/:id')
@@ -31,4 +31,20 @@ export class TaskController {
     async createTask(@Body() createTaskDto: CreateTaskDto): Promise<Task> {
         return await this.taskService.createTask(createTaskDto);
     }
+    
+    @Put('/:id')
+    @ApiOperation({ summary: 'Update a Task', description: 'Altera uma tarefa e registra no banco de dados' })
+    @ApiResponse({ status: 200, description: 'ok', type: Task, isArray: false })
+    async updateTask(@Body() taskUpdate: Task, @Param('id') id: number): Promise<UpdateResult> {
+        taskUpdate.id = id;
+        return await this.taskService.updateTask(taskUpdate);
+    }
+
+    @Delete('/:id')
+    @ApiOperation({ summary: 'Delete a Task', description: 'Deleta uma tarefa do banco de dados' })
+    @ApiResponse({ status: 200, description: 'ok', type: Task, isArray: false })
+    async deleteTask(@Param('id') id: number): Promise<DeleteResult> {
+        return await this.taskService.deleteTask(id);
+    }
+
 }
