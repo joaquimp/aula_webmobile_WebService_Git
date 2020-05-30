@@ -1,17 +1,20 @@
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 import { TaskStatus } from "./task-status.enum";
 
-@Entity()
+@Entity({name:'task'})
 export class Task extends BaseEntity{
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn({name:'id'})
     id: number;
 
-    @Column()
+    @Column({name:'title'})
     title: string;
 
-    @Column()
+    @Column({name:'description'})
     description: string;
 
-    @Column()
+    @Column({name:'status'})
     status: TaskStatus;
+
+    @Column({ default: false, name: 'completed', type: 'tinyint' })
+    completed: boolean;
 } 
