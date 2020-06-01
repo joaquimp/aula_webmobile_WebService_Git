@@ -4,9 +4,11 @@ import { AppService } from './app.service';
 import { TaskModule } from './task/task.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeOrmConfig } from './config/typeorm.config';
+import { CarController } from './car/car.controller';
+import { CarModule } from './car/car.module';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(typeOrmConfig),TaskModule],
+  imports: [TypeOrmModule.forRoot(typeOrmConfig),TaskModule, CarModule],
   controllers: [AppController],
   providers: [AppService],
 })
