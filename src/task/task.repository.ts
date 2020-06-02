@@ -30,16 +30,16 @@ export class TaskRepository extends Repository<Task> {
     }
 
     async putTask(createTaskDto: CreateTaskDto, id: number): Promise<Task> {
-        const query = this.createQueryBuilder('task');
-        query.update(createTaskDto).where('id = :codigo', {codigo: id});
+        const query = this.createQueryBuilder('task')
+        .update(createTaskDto).where('id = :codigo', {codigo: id});
         
         await query.execute();
         return this.findOne(id);
     }
 
     async deleteTask(id: number): Promise<number> {
-        const query = this.createQueryBuilder('task');
-        query.delete();
+        const query = this.createQueryBuilder('task')
+        .delete().where('id = :codigo', {codigo: id});
         return (await query.execute()).affected;
     }
 }
