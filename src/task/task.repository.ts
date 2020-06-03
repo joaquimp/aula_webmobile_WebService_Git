@@ -7,9 +7,14 @@ import { GetTasksFilterDto } from "./dto/get-task-filter.dto";
 @EntityRepository(Task)
 export class TaskRepository extends Repository<Task> {
 
-    async getTask(): Promise<Task[]> {
-        
+    async getTask(completed: boolean): Promise<Task[]> {
         const query = this.createQueryBuilder('task');
+        if (completed == true) {
+             query.where('status = :progresso', {progresso: 'COMPLETED'});
+        }else {
+            query.where('status != :progresso', {progresso: 'COMPLETED'});
+        }
+
         const tasks = await query.getMany();
         return tasks;
     }
@@ -24,4 +29,17 @@ export class TaskRepository extends Repository<Task> {
         return task;
     }
 
+    async putTask(createTaskDto: CreateTaskDto, id: number): Promise<Task> {
+        const query = this.createQueryBuilder('task')
+        .update(createTaskDto).where('id = :codigo', {codigo: id});
+        
+        await query.execute();
+        return this.findOne(id);
+    }
+
+    async deleteTask(id: number): Promise<number> {
+        const query = this.createQueryBuilder('task')
+        .delete().where('id = :codigo', {codigo: id});
+        return (await query.execute()).affected;
+    }
 }

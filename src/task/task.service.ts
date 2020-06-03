@@ -12,8 +12,8 @@ export class TaskService {
         private taskRepository: TaskRepository
     ) {}
 
-    async getTasks(): Promise<Task[]> {
-        return this.taskRepository.getTask();
+    async getTasks(completed: boolean): Promise<Task[]> {
+        return this.taskRepository.getTask(completed);
     }
 
     async getById(id: number): Promise<Task> {
@@ -28,5 +28,22 @@ export class TaskService {
 
     async createTask(createTaskDto: CreateTaskDto): Promise<Task> {
         return this.taskRepository.createTask(createTaskDto);
+    }
+    async putById(id: number, createTaskDto: CreateTaskDto): Promise<Task> {
+        const found = await this.taskRepository.findOne(id);
+        if (!found) {
+            throw new NotFoundException(`Task with ID "${id}" not found`);
+        }
+
+        return this.taskRepository.putTask(createTaskDto, id);
+    }
+
+    async deleteById(id: number): Promise<number> {
+        const found = await this.taskRepository.findOne(id);
+        if (!found) {
+            throw new NotFoundException(`Task with ID "${id}" not found`);
+        }
+
+        return this.taskRepository.deleteTask(id);
     }
 }
