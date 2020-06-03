@@ -12,8 +12,8 @@ export class TaskService {
         private taskRepository: TaskRepository
     ) {}
 
-    async getTasks(): Promise<Task[]> {
-        return this.taskRepository.getTask();
+    async getTasks(completed: boolean): Promise<Task[]> {
+        return this.taskRepository.getTask(completed);
     }
 
     async getById(id: number): Promise<Task> {
@@ -28,5 +28,13 @@ export class TaskService {
 
     async createTask(createTaskDto: CreateTaskDto): Promise<Task> {
         return this.taskRepository.createTask(createTaskDto);
+    }
+
+    async updateTask(id, createTaskDto: CreateTaskDto): Promise<Task> {
+        return this.taskRepository.updateTask(id, createTaskDto);
+    }
+
+    async deleteTask(id: number): Promise<number> {
+        return this.taskRepository.deleteTask(id);
     }
 }
